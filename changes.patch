@@ -1,0 +1,856 @@
+diff -ruN a/app/src/main/java/com/bartixxx/opflashcontrol/ExperimentalActivity.kt b/app/src/main/java/com/bartixxx/opflashcontrol/ExperimentalActivity.kt
+--- a/app/src/main/java/com/bartixxx/opflashcontrol/ExperimentalActivity.kt	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/java/com/bartixxx/opflashcontrol/ExperimentalActivity.kt	2026-10-05 22:32:04.385937670 +0000
+@@ -68,7 +68,7 @@
+                 delaySeekBar1.value = 500f
+                 delaySeekBar1.valueTo = 3000f
+                 lightCycleDelay = 500
+-                delayTextView2.text = "Delay: ${lightCycleDelay} ms"
++                delayTextView2.text = "延迟: ${lightCycleDelay} 毫秒"
+             } else {
+                 // Root mode: standard configuration
+                 // Set up slider for delay control with vibration feedback
+@@ -89,11 +89,11 @@
+                 // Vibrate on slider change
+                 VibrationUtil.vibrate(this@ExperimentalActivity, 50L)
+                 // Update the delayTextView with the current delay value
+-                delayTextView2.text = "Delay: ${lightCycleDelay} ms"
++                delayTextView2.text = "延迟: ${lightCycleDelay} 毫秒"
+             }
+ 
+             // Initialize the TextView with the current delay
+-            delayTextView2.text = "Delay: $lightCycleDelay ms"
++            delayTextView2.text = "延迟: $lightCycleDelay 毫秒"
+ 
+             // Add the listener to update brightness and TextView
+             brightnessSeekBar.addOnChangeListener { _, value, _ ->
+@@ -101,11 +101,11 @@
+                 // Vibrate on slider change
+                 VibrationUtil.vibrate(this@ExperimentalActivity, 50L)
+                 // Update the brightnessTextView with the current brightness value
+-                brightnessTextView.text = "Brightness: $lightCycleBrightness"
++                brightnessTextView.text = "亮度: $lightCycleBrightness"
+             }
+ 
+             // Initialize the TextView with the current brightness
+-            brightnessTextView.text = "Brightness: $lightCycleBrightness"
++            brightnessTextView.text = "亮度: $lightCycleBrightness"
+         }
+     }
+ 
+diff -ruN a/app/src/main/java/com/bartixxx/opflashcontrol/FlashlightFallbackController.kt b/app/src/main/java/com/bartixxx/opflashcontrol/FlashlightFallbackController.kt
+--- a/app/src/main/java/com/bartixxx/opflashcontrol/FlashlightFallbackController.kt	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/java/com/bartixxx/opflashcontrol/FlashlightFallbackController.kt	2026-10-05 22:32:04.385985779 +0000
+@@ -81,7 +81,7 @@
+         val cameraId = this.cameraId
+         if (cameraId == null) {
+             Log.e(TAG, "Camera not initialized")
+-            showToast("Camera not available")
++            showToast("相机不可用")
+             return
+         }
+ 
+@@ -100,7 +100,7 @@
+             }
+         } catch (e: Exception) {
+             Log.e(TAG, "Error turning on torch", e)
+-            showToast("Error controlling flashlight")
++            showToast("控制手电筒出错")
+         }
+     }
+ 
+@@ -120,7 +120,7 @@
+             Log.d(TAG, "Torch turned off")
+         } catch (e: Exception) {
+             Log.e(TAG, "Error turning off torch", e)
+-            showToast("Error controlling flashlight")
++            showToast("控制手电筒出错")
+         }
+     }
+ 
+diff -ruN a/app/src/main/java/com/bartixxx/opflashcontrol/LEDControlUtil.kt b/app/src/main/java/com/bartixxx/opflashcontrol/LEDControlUtil.kt
+--- a/app/src/main/java/com/bartixxx/opflashcontrol/LEDControlUtil.kt	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/java/com/bartixxx/opflashcontrol/LEDControlUtil.kt	2026-10-05 22:32:04.385997755 +0000
+@@ -251,7 +251,7 @@
+                 // Show toast on the main thread if allowed
+                 if (showToast) {
+                     mainHandler.post {
+-                        Toast.makeText(context, "Command executed successfully", Toast.LENGTH_SHORT)
++                        Toast.makeText(context, "命令执行成功", Toast.LENGTH_SHORT)
+                             .show()
+                     }
+                 }
+@@ -260,21 +260,21 @@
+                 e.printStackTrace()
+                 if (showToast) {
+                     mainHandler.post {
+-                        Toast.makeText(context, "IO error occurred", Toast.LENGTH_LONG).show()
++                        Toast.makeText(context, "发生 IO 错误", Toast.LENGTH_LONG).show()
+                     }
+                 }
+             } catch (e: SecurityException) {
+                 e.printStackTrace()
+                 if (showToast) {
+                     mainHandler.post {
+-                        Toast.makeText(context, "Permission denied", Toast.LENGTH_LONG).show()
++                        Toast.makeText(context, "权限被拒绝", Toast.LENGTH_LONG).show()
+                     }
+                 }
+             } catch (e: InterruptedException) {
+                 e.printStackTrace()
+                 if (showToast) {
+                     mainHandler.post {
+-                        Toast.makeText(context, "Operation interrupted", Toast.LENGTH_LONG).show()
++                        Toast.makeText(context, "操作被中断", Toast.LENGTH_LONG).show()
+                     }
+                 }
+             }
+@@ -291,7 +291,7 @@
+         // If we've exhausted all retries, show toast on the main thread
+         if (showToast) {
+             mainHandler.post {
+-                Toast.makeText(context, "Retry failed", Toast.LENGTH_LONG).show()
++                Toast.makeText(context, "重试失败", Toast.LENGTH_LONG).show()
+             }
+         }
+     }
+diff -ruN a/app/src/main/java/com/bartixxx/opflashcontrol/MainActivity.kt b/app/src/main/java/com/bartixxx/opflashcontrol/MainActivity.kt
+--- a/app/src/main/java/com/bartixxx/opflashcontrol/MainActivity.kt	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/java/com/bartixxx/opflashcontrol/MainActivity.kt	2026-10-05 22:32:04.386166738 +0000
+@@ -63,15 +63,7 @@
+         
+         with(binding) {
+             if (!isRootAvailable && maxTorchLevel > 1) {
+-                // Non-root mode: hide white/yellow controls, adjust master brightness
+-                whiteLabel.visibility = android.view.View.GONE
+-                whiteSeekBar.visibility = android.view.View.GONE
+-                whiteTextView.visibility = android.view.View.GONE
+-                
+-                yellowLabel.visibility = android.view.View.GONE
+-                yellowSeekBar.visibility = android.view.View.GONE
+-                yellowTextView.visibility = android.view.View.GONE
+-                
++                // Non-root mode: adjust overall brightness to torch levels
+                 destroyer.visibility = android.view.View.GONE
+                 
+                 // Hide info text about Eye Destroyer - not relevant in non-root mode
+@@ -82,7 +74,7 @@
+                 burnAwareCheckbox.visibility = android.view.View.GONE
+                 
+                 // Update master label to indicate non-root mode
+-                masterLabel.text = getString(R.string.master) + " (Non-Root: $maxTorchLevel levels)"
++                masterLabel.text = getString(R.string.master) + " (非 root：共 $maxTorchLevel 档)"
+                 
+                 // Adjust master slider to match torch levels - SET RANGE FIRST!
+                 masterSeekBar.valueFrom = 1f
+@@ -97,15 +89,7 @@
+                 masterSeekBar.valueFrom = 0f
+                 masterSeekBar.valueTo = 500f
+                 masterSeekBar.value = masterBrightness.coerceIn(0, 500).toFloat()
+-                masterTextView.text = "Master Brightness: $masterBrightness"
+-
+-                whiteSeekBar.valueFrom = 0f
+-                whiteSeekBar.valueTo = 500f
+-                whiteSeekBar.value = whiteBrightness.coerceIn(0, 500).toFloat()
+-
+-                yellowSeekBar.valueFrom = 0f
+-                yellowSeekBar.valueTo = 500f
+-                yellowSeekBar.value = yellowBrightness.coerceIn(0, 500).toFloat()
++                masterTextView.text = getString(R.string.master) + ": $masterBrightness"
+             }
+ 
+             burnAwareCheckbox.isChecked = isBurnAware
+@@ -116,7 +100,7 @@
+ 
+             setDefaultButton.setOnClickListener {
+                 VibrationUtil.vibrate(this@MainActivity, 100L)
+-                // Jeśli suwak jest na 0 lub 1, ustawiamy domyślnie 80
++                // 滑块在 0 或 1 时，默认亮度设为 80
+                 defaultBrightness = if (isRootAvailable) {
+                     if (masterBrightness <= 1) 80 else masterBrightness
+                 } else {
+@@ -129,7 +113,7 @@
+             setupSlider(masterSeekBar, masterTextView, if (isRootAvailable) getString(R.string.master) else getString(R.string.brightness)) { progress ->
+                 if (!safetyTriggered || isBurnAware) {
+                     masterBrightness = if (isRootAvailable) progress else (progress * 500 / maxTorchLevel)
+-                    if (isLedOn && (!isRootAvailable || (whiteBrightness <= 1 && yellowBrightness <= 1))) {
++                    if (isLedOn) {
+                         ledController.controlLeds(
+                             "on",
+                             LedPaths.WHITE_LED_PATH,
+@@ -142,40 +126,6 @@
+                 }
+             }
+ 
+-            if (isRootAvailable) {
+-                setupSlider(whiteSeekBar, whiteTextView, "White Brightness") { progress ->
+-                    if (!safetyTriggered || isBurnAware) {
+-                        whiteBrightness = progress
+-                        if (isLedOn) {
+-                            ledController.controlLeds(
+-                                "on",
+-                                LedPaths.WHITE_LED_PATH,
+-                                LedPaths.YELLOW_LED_PATH,
+-                                LedPaths.TOGGLE_PATHS,
+-                                whiteBrightness = progress,
+-                                yellowBrightness = yellowBrightness
+-                            )
+-                        }
+-                    }
+-                }
+-
+-                setupSlider(yellowSeekBar, yellowTextView, "Yellow Brightness") { progress ->
+-                    if (!safetyTriggered || isBurnAware) {
+-                        yellowBrightness = progress
+-                        if (isLedOn) {
+-                            ledController.controlLeds(
+-                                "on",
+-                                LedPaths.WHITE_LED_PATH,
+-                                LedPaths.YELLOW_LED_PATH,
+-                                LedPaths.TOGGLE_PATHS,
+-                                whiteBrightness = whiteBrightness,
+-                                yellowBrightness = progress
+-                            )
+-                        }
+-                    }
+-                }
+-            }
+-
+             on.setOnClickListener {
+                 VibrationUtil.vibrate(this@MainActivity, 100L)
+                 toggleLEDs(true)
+@@ -247,8 +197,8 @@
+                 LedPaths.WHITE_LED_PATH,
+                 LedPaths.YELLOW_LED_PATH,
+                 LedPaths.TOGGLE_PATHS,
+-                whiteBrightness = if (whiteBrightness == 0) masterBrightness else whiteBrightness,
+-                yellowBrightness = if (yellowBrightness == 0) masterBrightness else yellowBrightness
++                whiteBrightness = masterBrightness,
++                yellowBrightness = masterBrightness
+             )
+         } else {
+             ledController.controlLeds(
+@@ -264,7 +214,7 @@
+ 
+     private fun executeExtraFunction() {
+         if (eyeDestroyerCooldown) {
+-            Toast.makeText(this, "Please wait before using this feature again.", Toast.LENGTH_SHORT).show()
++            Toast.makeText(this, "请稍候再使用此功能", Toast.LENGTH_SHORT).show()
+             return
+         }
+         ledController.controlLeds("off", LedPaths.FLASH_WHITE_LED_PATH, LedPaths.FLASH_YELLOW_LED_PATH, LedPaths.TOGGLE_PATHS, whiteBrightness = 1000, yellowBrightness = 1000)
+@@ -293,7 +243,7 @@
+             return
+         }
+         val currentTime = System.currentTimeMillis()
+-        if (masterBrightness > MAX_BRIGHTNESS || whiteBrightness > MAX_BRIGHTNESS || yellowBrightness > MAX_BRIGHTNESS) {
++        if (masterBrightness > MAX_BRIGHTNESS) {
+             if (brightnessExceededTime == 0L) {
+                 brightnessExceededTime = currentTime
+             } else if (currentTime - brightnessExceededTime > 20000) {
+@@ -310,26 +260,18 @@
+             masterBrightness = SAFE_BRIGHTNESS
+             binding.masterSeekBar.value = SAFE_BRIGHTNESS.toFloat()
+         }
+-        if (whiteBrightness > MAX_BRIGHTNESS) {
+-            whiteBrightness = SAFE_BRIGHTNESS
+-            binding.whiteSeekBar.value = SAFE_BRIGHTNESS.toFloat()
+-        }
+-        if (yellowBrightness > MAX_BRIGHTNESS) {
+-            yellowBrightness = SAFE_BRIGHTNESS
+-            binding.yellowSeekBar.value = SAFE_BRIGHTNESS.toFloat()
+-        }
+         if (isLedOn) {
+             ledController.controlLeds(
+                 "on",
+                 LedPaths.WHITE_LED_PATH,
+                 LedPaths.YELLOW_LED_PATH,
+                 LedPaths.TOGGLE_PATHS,
+-                whiteBrightness = if (whiteBrightness > MAX_BRIGHTNESS) SAFE_BRIGHTNESS else whiteBrightness,
+-                yellowBrightness = if (yellowBrightness > MAX_BRIGHTNESS) SAFE_BRIGHTNESS else yellowBrightness
++                whiteBrightness = masterBrightness,
++                yellowBrightness = masterBrightness
+             )
+         }
+         safetyTriggered = true
+-        Toast.makeText(this, "Brightness exceeded limit! Adjusted to safe levels.", Toast.LENGTH_SHORT).show()
++        Toast.makeText(this, "亮度超出限制，已自动调整到安全亮度", Toast.LENGTH_SHORT).show()
+     }
+ 
+     private fun performSecretAction() {
+diff -ruN a/app/src/main/java/com/bartixxx/opflashcontrol/MainActivity2.kt b/app/src/main/java/com/bartixxx/opflashcontrol/MainActivity2.kt
+--- a/app/src/main/java/com/bartixxx/opflashcontrol/MainActivity2.kt	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/java/com/bartixxx/opflashcontrol/MainActivity2.kt	2026-10-05 22:32:04.386150979 +0000
+@@ -93,14 +93,14 @@
+             defaultBrightnessSeekBar.valueFrom = 1f
+             defaultBrightnessSeekBar.valueTo = 500f
+             defaultBrightnessSeekBar.value = defaultBrightness.toFloat()
+-            defaultBrightnessTextView.text = "Default Brightness: $defaultBrightness"
++            defaultBrightnessTextView.text = "默认亮度: $defaultBrightness"
+ 
+-            setupSlider(defaultBrightnessSeekBar, defaultBrightnessTextView, "Default Brightness") { progress ->
++            setupSlider(defaultBrightnessSeekBar, defaultBrightnessTextView, "默认亮度") { progress ->
+                 defaultBrightness = progress
+                 prefs.edit().putInt("default_brightness", progress).apply()
+             }
+ 
+-            setupSlider(masterSeekBar, masterTextView, "Master Brightness") { progress ->
++            setupSlider(masterSeekBar, masterTextView, "总亮度") { progress ->
+                 if (!safetyTriggered || isBurnAware) {
+                     masterBrightness = progress
+                     if (isLedOn && allBrightnessAtOne()) {
+@@ -120,7 +120,7 @@
+                 }
+             }
+ 
+-            setupSlider(whiteSeekBar, whiteTextView, "White Brightness") { progress ->
++            setupSlider(whiteSeekBar, whiteTextView, "白光亮度") { progress ->
+                 if (!safetyTriggered || isBurnAware) {
+                     whiteBrightness = progress
+                     if (isLedOn) ledController.controlLeds(
+@@ -138,7 +138,7 @@
+                 }
+             }
+ 
+-            setupSlider(yellowSeekBar, yellowTextView, "Yellow Brightness") { progress ->
++            setupSlider(yellowSeekBar, yellowTextView, "黄光亮度") { progress ->
+                 if (!safetyTriggered || isBurnAware) {
+                     yellowBrightness = progress
+                     if (isLedOn) ledController.controlLeds(
+@@ -156,7 +156,7 @@
+                 }
+             }
+ 
+-            setupSlider(white2SeekBar2, white2TextView3, "White2 Brightness") { progress ->
++            setupSlider(white2SeekBar2, white2TextView3, "白光2亮度") { progress ->
+                 if (!safetyTriggered || isBurnAware) {
+                     white2Brightness = progress
+                     if (isLedOn) ledController.controlLeds(
+@@ -174,7 +174,7 @@
+                 }
+             }
+ 
+-            setupSlider(yellow2SeekBar3, yellow2TextView2, "Yellow2 Brightness") { progress ->
++            setupSlider(yellow2SeekBar3, yellow2TextView2, "黄光2亮度") { progress ->
+                 if (!safetyTriggered || isBurnAware) {
+                     yellow2Brightness = progress
+                     if (isLedOn) ledController.controlLeds(
+@@ -315,7 +315,7 @@
+      */
+     private fun executeExtraFunction() {
+         if (eyeDestroyerCooldown) {
+-            Toast.makeText(this, "Please wait before using this feature again.", Toast.LENGTH_SHORT)
++            Toast.makeText(this, "请稍候再使用此功能", Toast.LENGTH_SHORT)
+                 .show()
+             return
+         }
+@@ -448,7 +448,7 @@
+             )
+             Toast.makeText(
+                 this,
+-                "Brightness exceeded limit! Adjusted to safe levels.",
++                "亮度超出限制，已自动调整到安全亮度",
+                 Toast.LENGTH_SHORT
+             ).show()
+         }
+diff -ruN a/app/src/main/java/com/bartixxx/opflashcontrol/SupportersData.kt b/app/src/main/java/com/bartixxx/opflashcontrol/SupportersData.kt
+--- a/app/src/main/java/com/bartixxx/opflashcontrol/SupportersData.kt	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/java/com/bartixxx/opflashcontrol/SupportersData.kt	2026-10-05 22:32:04.386057950 +0000
+@@ -19,7 +19,7 @@
+     val supporters = listOf(
+         Supporter(
+             "Bartixxx",
+-            "App Developer",
++            "应用开发者",
+             "https://ik.imagekit.io/bartixxx32/github/tr:r-20/u/16412925"
+         ),
+     )
+diff -ruN a/app/src/main/java/com/bartixxx/opflashcontrol/TileService.kt b/app/src/main/java/com/bartixxx/opflashcontrol/TileService.kt
+--- a/app/src/main/java/com/bartixxx/opflashcontrol/TileService.kt	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/java/com/bartixxx/opflashcontrol/TileService.kt	2026-10-05 22:32:04.386068520 +0000
+@@ -19,37 +19,34 @@
+  */
+ class LEDControlTileService : TileService() {
+ 
+-    // currentBrightnessState: 0 means off; otherwise, 1-indexed into brightnessSteps.
+-    private var currentBrightnessState = 0
++    // 磁贴只有"开 / 关"两种状态，开启时使用应用内设置的默认亮度。
++    private var isOn = false
+     private lateinit var ledController: LedController
+     private var brightnessExceededTime: Long = 0L
+     private var safetyTriggered = false
+     private val handler = Handler(Looper.getMainLooper())
+     private val checkInterval = 500L // Check every 500 milliseconds
+ 
+-    // Define brightness steps as absolute values.
+-    private val brightnessSteps = listOf(10, 20, 50, 80, 150, 250, 500)
+-    private val maxBrightness = 500
+-
+-    private var lastTapTime: Long = 0L // For double-tap detection.
+-    private val doubleTapInterval = 300L // Time window for detecting double-tap (in milliseconds)
+-
+-    private val serviceJob = Job()
+-    private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
++    private var serviceJob = Job()
++    private var serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
+ 
+     private var isBurnAware = false
+     private var defaultBrightness = 80
++    private var currentBrightness = 80
+ 
+     override fun onStartListening() {
+         super.onStartListening()
+         try {
++            serviceJob = Job()
++            serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
++
+             val prefs = getSharedPreferences("OpFlashControlPrefs", Context.MODE_PRIVATE)
+             isBurnAware = prefs.getBoolean("burn_aware", false)
+             defaultBrightness = prefs.getInt("default_brightness", 80)
+ 
+             ledController = LedController(this)
+             LedPaths.logDiagnostics()
+-            updateTileDescription()
++            updateTile()
+             startSafetyCheck()
+         } catch (e: Exception) {
+             Log.e("LEDControlTileService", "Error during onStartListening", e)
+@@ -59,61 +56,40 @@
+     override fun onStopListening() {
+         super.onStopListening()
+         stopSafetyCheck()
+-        ledController.cleanup()
++        if (::ledController.isInitialized) ledController.cleanup()
+         serviceJob.cancel()
+     }
+ 
+     override fun onClick() {
+         super.onClick()
+-        val currentTime = System.currentTimeMillis()
+-
+         try {
+-            if (currentTime - lastTapTime < doubleTapInterval) {
+-                // Double-tap detected.
+-                if (currentBrightnessState == 0) {
+-                    // When off, double-tap sets brightness to default.
+-                    Log.d("LEDControlTileService", "Double-tap detected while off, turning LEDs on at $defaultBrightness.")
+-                    controlAllLeds(defaultBrightness)
+-                    // Find closest step for state tracking or just set to a state
+-                    currentBrightnessState = (brightnessSteps.indexOfFirst { it >= defaultBrightness }.takeIf { it != -1 } ?: (brightnessSteps.size - 1)) + 1
+-                    updateTileDescription()
+-                } else {
+-                    // Otherwise, double-tap turns the LEDs off.
+-                    Log.d("LEDControlTileService", "Double-tap detected, turning off LEDs.")
+-                    turnOffLeds()
+-                }
++            VibrationUtil.vibrate(this, 50L)
++            if (isOn) {
++                turnOffLeds()
+             } else {
+-                // Single tap: cycle through brightness states.
+-                VibrationUtil.vibrate(this, 50L)
+-                
+-                if (currentBrightnessState == 0) {
+-                    // If turning on from OFF, use default brightness
+-                    currentBrightnessState = (brightnessSteps.indexOfFirst { it >= defaultBrightness }.takeIf { it != -1 } ?: (brightnessSteps.size - 1)) + 1
+-                    controlAllLeds(defaultBrightness)
+-                } else {
+-                    // Cycle through states
+-                    currentBrightnessState = (currentBrightnessState + 1) % (brightnessSteps.size + 1)
+-                    val brightnessValue = if (currentBrightnessState == 0) 0
+-                    else brightnessSteps[currentBrightnessState - 1]
+-                    controlAllLeds(brightnessValue)
+-                }
+-                updateTileDescription()
++                turnOnLeds()
+             }
+         } catch (e: Exception) {
+             Log.e("LEDControlTileService", "Error during onClick", e)
+             turnOffLeds()
+         }
++    }
+ 
+-        lastTapTime = currentTime
++    private fun turnOnLeds() {
++        isOn = true
++        currentBrightness = defaultBrightness
++        brightnessExceededTime = 0L
++        safetyTriggered = false
++        controlAllLeds(currentBrightness)
++        updateTile()
+     }
+ 
+     private fun turnOffLeds() {
+         try {
+-            currentBrightnessState = 0
++            isOn = false
+             controlAllLeds(0) // Turn off LEDs.
+             ledController.cleanup()
+-            updateTileDescription()
+-            VibrationUtil.vibrate(this, 100L) // Provide haptic feedback.
++            updateTile()
+         } catch (e: Exception) {
+             Log.e("LEDControlTileService", "Error turning off LEDs", e)
+         }
+@@ -139,58 +115,44 @@
+     private fun checkBrightnessSafety() {
+         if (isBurnAware) return
+ 
+-        try {
+-            val currentTime = System.currentTimeMillis()
+-            val brightnessValue = if (currentBrightnessState == 0) 0
+-            else brightnessSteps[currentBrightnessState - 1]
+-
+-            if (brightnessValue > 120) {
+-                if (brightnessExceededTime == 0L) {
+-                    brightnessExceededTime = currentTime
+-                } else if (currentTime - brightnessExceededTime > 20000) { // More than 20 seconds.
+-                    if (!safetyTriggered) {
+-                        safetyTriggered = true
+-                        // Revert to 80
+-                        currentBrightnessState = brightnessSteps.indexOf(80) + 1
+-                        controlAllLeds(80)
+-                        updateTileDescription()
+-                    }
++        val currentTime = System.currentTimeMillis()
++        if (isOn && currentBrightness > 120) {
++            if (brightnessExceededTime == 0L) {
++                brightnessExceededTime = currentTime
++            } else if (currentTime - brightnessExceededTime > 20000) { // More than 20 seconds.
++                if (!safetyTriggered) {
++                    safetyTriggered = true
++                    // Revert to safe brightness
++                    currentBrightness = 80
++                    controlAllLeds(80)
+                 }
+-            } else {
+-                brightnessExceededTime = 0L
+-                safetyTriggered = false
+             }
+-        } catch (e: Exception) {
+-            Log.e("LEDControlTileService", "Error during brightness safety check", e)
++        } else {
++            brightnessExceededTime = 0L
++            safetyTriggered = false
+         }
+     }
+ 
+-    private fun updateTileDescription() {
++    private fun updateTile() {
+         try {
+-            val stateText = when (currentBrightnessState) {
+-                0 -> getString(R.string.double_tap_to_turn_off)
+-                else -> {
+-                    val brightnessValue = brightnessSteps[currentBrightnessState - 1]
+-                    val brightnessPercentage = brightnessValue * 100 / maxBrightness
+-                    "${getString(R.string.brightness)}: $brightnessPercentage%"
+-                }
+-            }
+-
+-            qsTile.label = if (currentBrightnessState == 0)
+-                getString(R.string.flashlight_off)
+-            else
++            qsTile.label = if (isOn)
+                 getString(R.string.flashlight_on)
++            else
++                getString(R.string.flashlight_off)
+ 
+             qsTile.icon = Icon.createWithResource(
+                 this,
+-                if (currentBrightnessState == 0) R.drawable.floff else R.drawable.flon
++                if (isOn) R.drawable.flon else R.drawable.floff
+             )
+ 
+-            qsTile.subtitle = stateText
+-            qsTile.state = if (currentBrightnessState == 0) Tile.STATE_INACTIVE else Tile.STATE_ACTIVE
++            qsTile.subtitle = if (isOn)
++                getString(R.string.tap_to_turn_off)
++            else
++                getString(R.string.tap_to_turn_on)
++            qsTile.state = if (isOn) Tile.STATE_ACTIVE else Tile.STATE_INACTIVE
+             qsTile.updateTile()
+         } catch (e: Exception) {
+-            Log.e("LEDControlTileService", "Error updating tile description", e)
++            Log.e("LEDControlTileService", "Error updating tile", e)
+         }
+     }
+ 
+diff -ruN a/app/src/main/res/layout/activity_experimental.xml b/app/src/main/res/layout/activity_experimental.xml
+--- a/app/src/main/res/layout/activity_experimental.xml	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/res/layout/activity_experimental.xml	2026-10-05 22:32:04.386305095 +0000
+@@ -34,7 +34,7 @@
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="5dp"
+-        android:text="Delay: 500ms"
++        android:text="延迟: 500毫秒"
+         android:textColor="@color/material_dynamic_neutral90"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+@@ -45,7 +45,7 @@
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="5dp"
+-        android:text="Delay: 500ms"
++        android:text="延迟: 500毫秒"
+         android:textColor="@color/material_dynamic_neutral90"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.501"
+diff -ruN a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/res/layout/activity_main.xml	2026-10-05 22:32:04.386315559 +0000
+@@ -128,83 +128,11 @@
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:gravity="center"
+-                android:text="Master Brightness: 80"
++                android:text="总亮度: 80"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toBottomOf="@id/masterSeekBar" />
+ 
+-            <!-- White Brightness Control -->
+-            <com.google.android.material.textview.MaterialTextView
+-                android:id="@+id/whiteLabel"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:layout_marginTop="12dp"
+-                android:gravity="center"
+-                android:text="@string/white"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toBottomOf="@id/masterTextView" />
+-
+-            <com.google.android.material.slider.Slider
+-                android:id="@+id/whiteSeekBar"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:max="500"
+-                android:min="0"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toBottomOf="@id/whiteLabel"
+-                app:thumbColor="@color/material_dynamic_neutral50"
+-                app:trackColorActive="@color/material_dynamic_neutral60"
+-                app:trackColorInactive="@color/material_dynamic_neutral40"
+-                 />
+-
+-            <com.google.android.material.textview.MaterialTextView
+-                android:id="@+id/whiteTextView"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:gravity="center"
+-                android:text="White Brightness: 0"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toBottomOf="@id/whiteSeekBar" />
+-
+-            <!-- Yellow Brightness Control -->
+-            <com.google.android.material.textview.MaterialTextView
+-                android:id="@+id/yellowLabel"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:layout_marginTop="12dp"
+-                android:gravity="center"
+-                android:text="@string/yellow"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toBottomOf="@id/whiteTextView" />
+-
+-            <com.google.android.material.slider.Slider
+-                android:id="@+id/yellowSeekBar"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:max="500"
+-                android:min="0"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toBottomOf="@id/yellowLabel"
+-                app:thumbColor="@color/material_dynamic_neutral50"
+-                app:trackColorActive="@color/material_dynamic_neutral60"
+-                app:trackColorInactive="@color/material_dynamic_neutral40"
+-                 />
+-
+-            <com.google.android.material.textview.MaterialTextView
+-                android:id="@+id/yellowTextView"
+-                android:layout_width="0dp"
+-                android:layout_height="wrap_content"
+-                android:gravity="center"
+-                android:text="Yellow Brightness: 0"
+-                app:layout_constraintEnd_toEndOf="parent"
+-                app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toBottomOf="@id/yellowSeekBar" />
+-
+             <!-- Additional Controls -->
+             <com.google.android.material.button.MaterialButton
+                 android:id="@+id/destroyer"
+@@ -215,7 +143,7 @@
+                 app:backgroundTint="@color/material_dynamic_neutral70"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+-                app:layout_constraintTop_toBottomOf="@id/yellowTextView" />
++                app:layout_constraintTop_toBottomOf="@id/masterTextView" />
+ 
+             <com.google.android.material.textview.MaterialTextView
+                 android:id="@+id/infoTextView"
+diff -ruN a/app/src/main/res/layout/activity_main2.xml b/app/src/main/res/layout/activity_main2.xml
+--- a/app/src/main/res/layout/activity_main2.xml	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/res/layout/activity_main2.xml	2026-10-05 22:32:04.386327358 +0000
+@@ -100,7 +100,7 @@
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:gravity="center"
+-                android:text="Default Brightness: 80"
++                android:text="默认亮度: 80"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toBottomOf="@id/defaultBrightnessSeekBar" />
+@@ -139,7 +139,7 @@
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:gravity="center"
+-                android:text="Master Brightness: 80"
++                android:text="总亮度: 80"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toBottomOf="@id/masterSeekBar" />
+@@ -172,7 +172,7 @@
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:gravity="center"
+-                android:text="White Brightness: 0"
++                android:text="白光亮度: 0"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toBottomOf="@id/whiteSeekBar" />
+@@ -204,7 +204,7 @@
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:gravity="center"
+-                android:text="Yellow Brightness: 0"
++                android:text="黄光亮度: 0"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toBottomOf="@id/yellowSeekBar" />
+@@ -236,7 +236,7 @@
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:gravity="center"
+-                android:text="White2 Brightness: 0"
++                android:text="白光2亮度: 0"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toBottomOf="@id/white2SeekBar2" />
+@@ -268,7 +268,7 @@
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:gravity="center"
+-                android:text="Yellow2 Brightness: 0"
++                android:text="黄光2亮度: 0"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toStartOf="parent"
+                 app:layout_constraintTop_toBottomOf="@id/yellow2SeekBar3" />
+diff -ruN a/app/src/main/res/layout/item_supporter.xml b/app/src/main/res/layout/item_supporter.xml
+--- a/app/src/main/res/layout/item_supporter.xml	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/res/layout/item_supporter.xml	2026-10-05 22:32:04.386348159 +0000
+@@ -33,7 +33,7 @@
+             android:layout_height="wrap_content"
+             android:layout_marginStart="16dp"
+             android:layout_marginEnd="8dp"
+-            android:text="Supporter Name"
++            android:text="支持者名称"
+             android:textColor="?attr/colorOnSurface"
+             android:textSize="20sp"
+             android:textStyle="bold"
+@@ -49,7 +49,7 @@
+             android:layout_marginStart="16dp"
+             android:layout_marginTop="4dp"
+             android:layout_marginEnd="8dp"
+-            android:text="Supporter Info"
++            android:text="支持者信息"
+             android:textColor="?attr/colorOnSurfaceVariant"
+             android:textSize="14sp"
+             app:layout_constraintEnd_toEndOf="parent"
+diff -ruN a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	2026-06-26 23:30:16.000000000 +0000
++++ b/app/src/main/res/values/strings.xml	2026-10-05 22:32:04.386771112 +0000
+@@ -1,41 +1,42 @@
+ <resources>
+     <string name="app_name" translatable="false">OnePlus Flash Control</string>
+-    <string name="command_executed">Command executed</string>
+-    <string name="master">Master control</string>
+-    <string name="white">White control</string>
+-    <string name="yellow">Yellow control</string>
+-    <string name="white2">White control/2</string>
+-    <string name="yellow2">Yellow control/2</string>
+-    <string name="on">On</string>
+-    <string name="off">Off</string>
+-    <string name="info">Yes, really dont use it too often, it may overheat/destroy led</string>
+-    <string name="destroyer">Eye destroer</string>
+-    <string name="quadled">Go to Quad-LED</string>
+-    <string name="dualled">Go to Dual-LED</string>
+-    <string name="alternateon" translatable="false">Alternate ON</string>
+-    <string name="alternateoff" translatable="false">Alternate OFF</string>
+-    <string name="alternatebright" translatable="false">Alternate Brightness ON</string>
+-    <string name="alternatebrightoff" translatable="false">Alternate Brightness OFF</string>
+-    <string name="experimental">You discovered experimential and fun stuff</string>
+-    <string name="back">Back</string>
+-    <string name="delayvalue">Delay for alternate</string>
+-    <string name="brightnessalternate">Brightness for alternate</string>
++    <string name="command_executed">命令已执行</string>
++    <string name="master">总亮度</string>
++    <string name="white">白光亮度</string>
++    <string name="yellow">黄光亮度</string>
++    <string name="white2">白光2亮度</string>
++    <string name="yellow2">黄光2亮度</string>
++    <string name="on">开启</string>
++    <string name="off">关闭</string>
++    <string name="info">说真的，请不要频繁使用，否则可能导致 LED 过热或损坏</string>
++    <string name="destroyer">致盲模式</string>
++    <string name="quadled">切换到四灯模式</string>
++    <string name="dualled">切换到双灯模式</string>
++    <string name="alternateon" translatable="false">交替开启</string>
++    <string name="alternateoff" translatable="false">交替关闭</string>
++    <string name="alternatebright" translatable="false">交替亮度开启</string>
++    <string name="alternatebrightoff" translatable="false">交替亮度关闭</string>
++    <string name="experimental">你发现了实验性的趣味功能</string>
++    <string name="back">返回</string>
++    <string name="delayvalue">交替延迟</string>
++    <string name="brightnessalternate">交替亮度</string>
+     <string name="buycoffe" translatable="false">Buy me a coffee ☕</string>
+-    <string name="donate" translatable="true">If you would like to support the project you can donate to us</string>
+-    <string name="donate2" translatable="true">Tap to visit the donation page, or press and hold to view the supporters list</string>
+-    <string name="supporters" translatable="true">Supporters</string>
+-    <string name="double_tap_to_turn_off">Double-tap to turn off LEDs</string>
+-    <string name="brightness">Brightness</string>
+-    <string name="flashlight_off">Flashlight OFF</string>
+-    <string name="flashlight_on">Flashlight ON</string>
+-    <string name="command_failed">Failed to execute command</string>
+-    <string name="error_io">Command failed: IO error occurred</string>
+-    <string name="error_permission">Command failed: Permission denied</string>
+-    <string name="error_interrupted">Command failed: Process interrupted</string>
+-    <string name="error_retry_failed">Getting ROOT failed</string>
+-    <string name="safety">Returned to safe limits</string>
+-    <string name="burn_awareness">I am aware i can burn my LED</string>
+-    <string name="default_brightness">Default Brightness</string>
+-    <string name="set_as_default">Set master as default</string>
+-    <string name="default_brightness_set">Default brightness set to %1$d</string>
++    <string name="donate" translatable="true">如果你想支持本项目，可以向我们捐赠</string>
++    <string name="donate2" translatable="true">点按访问捐赠页面，长按查看支持者名单</string>
++    <string name="supporters" translatable="true">支持者</string>
++    <string name="tap_to_turn_on">点按开启</string>
++    <string name="tap_to_turn_off">点按关闭</string>
++    <string name="brightness">亮度</string>
++    <string name="flashlight_off">手电筒已关闭</string>
++    <string name="flashlight_on">手电筒已开启</string>
++    <string name="command_failed">命令执行失败</string>
++    <string name="error_io">命令失败：发生 IO 错误</string>
++    <string name="error_permission">命令失败：权限被拒绝</string>
++    <string name="error_interrupted">命令失败：进程被中断</string>
++    <string name="error_retry_failed">获取 ROOT 权限失败</string>
++    <string name="safety">已恢复到安全限制</string>
++    <string name="burn_awareness">我知道这可能烧坏 LED</string>
++    <string name="default_brightness">默认亮度</string>
++    <string name="set_as_default">将总亮度设为默认</string>
++    <string name="default_brightness_set">默认亮度已设置为 %1$d</string>
+ </resources>
